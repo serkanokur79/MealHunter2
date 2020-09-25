@@ -1,25 +1,23 @@
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Form = props => {
+const Form = (props) => {
   return (
-    <div>
-      <p />
-
-      <div className="row justify-content-center">
-        <div className="col-sm-12 col-md-4 ">
-          <input
-            onChange={props.getRecipe}
-            className="form-control shadow  mb-3 bg-white rounded"
-            type="text"
-            placeholder="food to search"
-            name="searchName"
-          />
-        </div>
-      </div>
-
-      <p />
-    </div>
+    <>
+      <form class='navbar-form navbar-left'>
+        <input
+          onChange={props.getRecipe}
+          className='form-control shadow  mb-3 bg-white rounded'
+          class='form-control mr-sm-2'
+          type='search'
+          placeholder='food to search'
+          name='searchName'
+        />
+        <button class='btn btn-outline-success my-2 my-sm-0' type='submit'>
+          Search
+        </button>
+      </form>
+    </>
   );
 };
 

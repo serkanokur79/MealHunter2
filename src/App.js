@@ -1,46 +1,59 @@
-import React, { Component } from 'react';
-import Form from './components/Form';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import MealList from './components/MealList';
+import React, { useState } from 'react';
+import Paper from '@material-ui/core/Paper';
 import Header from './components/Header';
+import Meal from './components/Meal';
+import Main from './components/Main';
+import NotFound from './components/NotFound';
 import Footer from './components/Footer';
+import CatPage from './components/CatPage';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
-class App extends Component {
-  state = {
-    meals: []
+function App() {
+  const [darkState, setDarkState] = useState(false);
+  const palletType = darkState ? 'dark' : 'light';
+  const theme = createMuiTheme({
+    palette: {
+      type: palletType,
+    },
+  });
+  const handleThemeChange = () => {
+    setDarkState(!darkState);
   };
-  componentDidUpdate = () => {
-    const meals = JSON.stringify(this.state.meals);
-    localStorage.setItem('meals', meals);
-  };
-  componentDidMount() {
-    const json = localStorage.getItem('meals');
-    const meals = JSON.parse(json);
-    this.setState({ meals: meals });
-  }
 
-  getRecipe = async e => {
-    const searchName = e.target.value;
-    e.preventDefault();
-
-    const api_call = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchName}`
-    );
-    const data = await api_call.json();
-
-    this.setState({ meals: data.meals });
-    console.log(this.state.meals);
-  };
-  render() {
-    return (
-      <div>
-        <Header title='Meal Hunter' />
-        <Form getRecipe={this.getRecipe} />
-        <MealList meals={this.state.meals} />
-        <Footer />
-      </div>
-    );
-  }
+  return (
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Paper>
+          <Grid container direction='column'>
+            <Header title='Meal Hunter' handleThemeChange={handleThemeChange} />
+            <Grid item container>
+              <Grid item sm={false} md={1}></Grid>
+              <Grid item sm={12} md={10}>
+                <Switch>
+                  <Route exact path='/cat/:name'>
+                    <CatPage />
+                  </Route>
+                  <Route exact path='/'>
+                    <Main />
+                  </Route>
+                  <Route exact path='/meal/:id'>
+                    <Meal />
+                  </Route>
+                  <Route>
+                    <NotFound />
+                  </Route>
+                </Switch>
+              </Grid>
+              <Grid item sm={false} md={1}></Grid>
+            </Grid>
+            <Footer />
+          </Grid>
+        </Paper>
+      </Router>
+    </ThemeProvider>
+  );
 }
 
 export default App;
